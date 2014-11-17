@@ -1,0 +1,2 @@
+K:\HeroTrainer_MythicPixel\HeroTrainer_MythicPixel\obj\Debug\shaders\shaders\Texture.cgx
+K:\HeroTrainer_MythicPixel\HeroTrainer_MythicPixel\obj\Debug\HeroTrainer_MythicPixel.csprojResolveAssemblyReference.cache
