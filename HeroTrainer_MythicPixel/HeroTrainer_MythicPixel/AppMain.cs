@@ -20,13 +20,13 @@ namespace HeroTrainer_MythicPixel
 		
 		private static Warrior 											hero;
 		private static Enemy											monster;
-		private static Timer											damagePerSecond; 
+		private static Timer											tDamage; 
 		
 		public static void Main (string[] args)
 		{
-			Initialize ();
-			DPS = new Timer();
-			DPS.Reset();
+			Initialize();
+			tDamage = new Timer();
+			tDamage.Reset();
 			//Game loop.
 			bool quitGame = false;
 			while (!quitGame)
@@ -53,7 +53,7 @@ namespace HeroTrainer_MythicPixel
 			gameScene.Camera.SetViewFromViewport();
 			
 			//Set the ui scene.
-			uiScene = new Sce.PlayStation.HighLevel.UI.Scene();
+			uiScene 	 = new Sce.PlayStation.HighLevel.UI.Scene();
 			Panel panel  = new Panel();
 			panel.Width  = Director.Instance.GL.Context.GetViewport().Width;
 			panel.Height = Director.Instance.GL.Context.GetViewport().Height;
@@ -62,22 +62,25 @@ namespace HeroTrainer_MythicPixel
 			healthLabel.HorizontalAlignment = HorizontalAlignment.Left;
 			healthLabel.VerticalAlignment = VerticalAlignment.Top;
 			
-			healthLabel.TextShadow = new TextShadowSettings();
-			healthLabel.TextShadow.Color = new UIColor(0.0f,0.0f,0.0f,1.0f);
+			healthLabel.Font = new UIFont("/Application/fonts/8bitlim.ttf",
+			                              28, Sce.PlayStation.Core.Imaging.FontStyle.Regular);
+			
+			healthLabel.TextShadow 		 = new TextShadowSettings();
+			healthLabel.TextShadow.Color = new UIColor(0.0f,1.0f,0.0f,1.0f);
 			healthLabel.TextShadow.HorizontalOffset = 2.0f;
-			healthLabel.TextShadow.VerticalOffset = 2.0f;
+			healthLabel.TextShadow.VerticalOffset 	= 2.0f;
 
 			healthLabel.SetPosition(
 				Director.Instance.GL.Context.GetViewport().Width/2 - healthLabel.Width/2,
-				Director.Instance.GL.Context.GetViewport().Width*0.1f - healthLabel.Height/2);
+				Director.Instance.GL.Context.GetViewport().Height*0.1f - healthLabel.Height/2);
 			
-			healthLabel.Text = "Health: ";
+			healthLabel.Text = "Health  50";
 			
 			panel.AddChildLast(healthLabel);
 			uiScene.RootWidget.AddChildLast(panel);
 			UISystem.SetScene(uiScene);	
 			
-			hero = new Warrior(gameScene);
+			hero 	= new Warrior(gameScene);
 			monster = new Enemy(gameScene);
 			
 			//Run the scene.
@@ -88,11 +91,13 @@ namespace HeroTrainer_MythicPixel
 		
 		public static void Combat()
 		{
-			if(damagePerSecond.Seconds() > hero.Statistics.haste)
+			if(tDamage.Seconds() > hero.GetHaste)
 			{
-				monster.health -= hero.Statistics.strength / 2;
-				damagePerSecond.Reset();
+				monster.GetHealth -= hero.GetStrength / 2;		
+				healthLabel.Text = "Health  " + monster.GetHealth.ToString();
+				tDamage.Reset();
 			}
+			
 		}
 		
 		public static void Update ()

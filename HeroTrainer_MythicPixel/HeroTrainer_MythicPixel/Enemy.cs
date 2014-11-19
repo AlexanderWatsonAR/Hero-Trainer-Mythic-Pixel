@@ -13,9 +13,9 @@ namespace HeroTrainer_MythicPixel
 	{
 		private static SpriteUV		enemy;
 		private static TextureInfo	enemyInfo;
-		private static float		health;
+		private static float 		health;
 		
-		public float Damage { get{return health;} set{health = value;} }
+		public float GetHealth { get{return health;} set{health = value;} }
 		
 		public Enemy (Scene gameScene)
 		{
@@ -30,7 +30,6 @@ namespace HeroTrainer_MythicPixel
 		{
 			enemyInfo.Dispose();
 		}
-		
 		public void Update(float deltaTime)
 		{
 		}

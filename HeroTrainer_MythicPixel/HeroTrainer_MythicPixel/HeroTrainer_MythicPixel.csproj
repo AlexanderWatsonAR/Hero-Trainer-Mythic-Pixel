@@ -53,12 +53,14 @@
   <ItemGroup>
     <Folder Include="statistics\" />
     <Folder Include="textures\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="statistics\character.txt" />
+    <Folder Include="fonts\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="textures\bob.png" />
     <Content Include="textures\monster.png" />
+    <Content Include="statistics\character.txt">
+      <DeployService-Deploy>true</DeployService-Deploy>
+    </Content>
+    <Content Include="fonts\8bitlim.ttf" />
   </ItemGroup>
 </Project>
