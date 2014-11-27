@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 using Sce.PlayStation.Core;
 using Sce.PlayStation.Core.Graphics;
@@ -15,15 +14,17 @@ namespace HeroTrainer_MythicPixel
 		private static TextureInfo	enemyInfo;
 		private static float 		health;
 		
-		public float GetHealth { get{return health;} set{health = value;} }
+		public float Health { get{return health;} set{health = value;} }
 		
 		public Enemy (Scene gameScene)
 		{
 			enemyInfo 			= new TextureInfo("/Application/textures/monster.png");
 			enemy				= new SpriteUV(enemyInfo);
-			enemy.Position		= new Vector2((Director.Instance.GL.Context.GetViewport().Width/2) + 50,
+			enemy.Position		= new Vector2((Director.Instance.GL.Context.GetViewport().Width/2) + 75,
 			                            	  Director.Instance.GL.Context.GetViewport().Height/2);
 			health = 50.0f;
+			enemy.Scale = enemyInfo.TextureSizef;
+			gameScene.AddChild(enemy);
 		}
 		
 		public void Dispose()

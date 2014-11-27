@@ -12,10 +12,13 @@ namespace HeroTrainer_MythicPixel
 	public class Warrior
 	{	
 		//Accessor
-		public float GetStrength{ get{return strength;} set{strength = value;} }
-		public float GetLuck{ get{return luck;} set{luck = value;} }
-		public float GetHaste{ get{return haste;} set{haste = value;} }
-		public float GetOpportunity{ get{return opportunity;} set{opportunity = value;} }
+		public float Strength{ get{return strength;} set{strength = value;} }
+		public float Luck{ get{return luck;} set{luck = value;} }
+		public float Haste{ get{return haste;} set{haste = value;} }
+		public float Opportunity{ get{return opportunity;} set{opportunity = value;} }
+		public string Name{ get{return name;} }
+		
+		private static string name;
 		
 		private static float strength;
 		private static float luck;
@@ -30,12 +33,11 @@ namespace HeroTrainer_MythicPixel
 			string path			= "/Application/statistics/character.txt";
 			bobInfo 			= new TextureInfo("/Application/textures/bob.png");
 			bob					= new SpriteUV(bobInfo);
-			bob.Position		= new Vector2(Director.Instance.GL.Context.GetViewport().Width/2,
+			bob.Position		= new Vector2(Director.Instance.GL.Context.GetViewport().Width/4,
 			                            	  Director.Instance.GL.Context.GetViewport().Height/2);
 			
+			bob.Scale = bobInfo.TextureSizef;
 			Load(path);
-
-			
 			gameScene.AddChild(bob);	
 		}
 		
@@ -50,31 +52,35 @@ namespace HeroTrainer_MythicPixel
 			using (StreamReader reader = new StreamReader(path))
 			{
 				string line = reader.ReadLine();
-				for(int i = 0; i < 4; i++)
+				int count = int.Parse(line);
+				for(int i = 0; i < count; i++)
 				{
-					
 					if(line.IndexOf('s') == 0)
 					{
 						line = line.TrimStart('s');
 						strength = float.Parse(line);
 					}
 					
-					if(line.IndexOf('l') == 0)
+					else if(line.IndexOf('l') == 0)
 					{
 						line = line.TrimStart('l');
 						luck = float.Parse(line);
 					}
 					
-					if(line.IndexOf('h') == 0)
+					else if(line.IndexOf('h') == 0)
 					{
 						line = line.TrimStart('h');
 						haste = float.Parse(line);
 					}
 					
-					if(line.IndexOf('o') == 0)
+					else if(line.IndexOf('o') == 0)
 					{
 						line = line.TrimStart('o');
 						opportunity = float.Parse(line);
+					}
+					else
+					{
+						name = line;
 					}
 					line = reader.ReadLine();
 				}

@@ -1,10 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="HeroTrainer_MythicPixel\Warrior.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="HeroTrainer_MythicPixel\AppMain.cs">
     <Files>
-      <File FileName="HeroTrainer_MythicPixel\AppMain.cs" Line="66" Column="35" />
-      <File FileName="HeroTrainer_MythicPixel\Enemy.cs" Line="32" Column="4" />
-      <File FileName="HeroTrainer_MythicPixel\Warrior.cs" Line="37" Column="1" />
+      <File FileName="HeroTrainer_MythicPixel\AppMain.cs" Line="29" Column="3" />
+      <File FileName="HeroTrainer_MythicPixel\GameState.cs" Line="18" Column="23" />
+      <File FileName="HeroTrainer_MythicPixel\FightScreen.cs" Line="112" Column="24" />
+      <File FileName="HeroTrainer_MythicPixel\IntroScene.cs" Line="30" Column="72" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

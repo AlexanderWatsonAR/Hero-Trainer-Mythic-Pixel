@@ -13,103 +13,79 @@ using Sce.PlayStation.HighLevel.UI;
 namespace HeroTrainer_MythicPixel
 {
 	public class AppMain
-	{
-		private static Sce.PlayStation.HighLevel.GameEngine2D.Scene 	gameScene;
-		private static Sce.PlayStation.HighLevel.UI.Scene 				uiScene;
-		private static Sce.PlayStation.HighLevel.UI.Label				healthLabel;
+	{	
+		private static GameState currentState;
+		private static AppMain instance = new AppMain();
 		
-		private static Warrior 											hero;
-		private static Enemy											monster;
-		private static Timer											tDamage; 
+		private static Sce.PlayStation.HighLevel.UI.UIFont					bodyText;
+		private static Sce.PlayStation.HighLevel.UI.TextShadowSettings		bodyTextShadow;
 		
-		public static void Main (string[] args)
-		{
+		//Accessors
+		public Sce.PlayStation.HighLevel.UI.UIFont BodyText{ get{return bodyText;} }
+		public Sce.PlayStation.HighLevel.UI.TextShadowSettings BodyTextShadow{ get{return bodyTextShadow;} }
+		public GameState State { get{return currentState;} set{currentState = value;} }
+		
+		public AppMain(){}
+		
+		public static void Main(string[] args)
+		{	
+			currentState = new FightScreen(instance);
 			Initialize();
-			tDamage = new Timer();
-			tDamage.Reset();
+			
 			//Game loop.
 			bool quitGame = false;
+			
 			while (!quitGame)
 			{
 				Update();
-				
 				Director.Instance.Update();
 				Director.Instance.Render();
 				UISystem.Render();
-				
 				Director.Instance.GL.Context.SwapBuffers();
 				Director.Instance.PostSwap();
 			}
+			UnloadContent();
+			Director.Terminate();
 		}
 		
 		public static void Initialize ()
 		{
-			// Set up the graphics system
+			// Set up the graphics system.
 			Director.Initialize ();
 			UISystem.Initialize(Director.Instance.GL.Context);
 			
-			//Set game scene
-			gameScene = new Sce.PlayStation.HighLevel.GameEngine2D.Scene();
-			gameScene.Camera.SetViewFromViewport();
-			
 			//Set the ui scene.
-			uiScene 	 = new Sce.PlayStation.HighLevel.UI.Scene();
-			Panel panel  = new Panel();
-			panel.Width  = Director.Instance.GL.Context.GetViewport().Width;
-			panel.Height = Director.Instance.GL.Context.GetViewport().Height;
-			
-			healthLabel = new Sce.PlayStation.HighLevel.UI.Label();
-			healthLabel.HorizontalAlignment = HorizontalAlignment.Left;
-			healthLabel.VerticalAlignment = VerticalAlignment.Top;
-			
-			healthLabel.Font = new UIFont("/Application/fonts/8bitlim.ttf",
-			                              28, Sce.PlayStation.Core.Imaging.FontStyle.Regular);
-			
-			healthLabel.TextShadow 		 = new TextShadowSettings();
-			healthLabel.TextShadow.Color = new UIColor(0.0f,1.0f,0.0f,1.0f);
-			healthLabel.TextShadow.HorizontalOffset = 2.0f;
-			healthLabel.TextShadow.VerticalOffset 	= 2.0f;
-
-			healthLabel.SetPosition(
-				Director.Instance.GL.Context.GetViewport().Width/2 - healthLabel.Width/2,
-				Director.Instance.GL.Context.GetViewport().Height*0.1f - healthLabel.Height/2);
-			
-			healthLabel.Text = "Health  50";
-			
-			panel.AddChildLast(healthLabel);
-			uiScene.RootWidget.AddChildLast(panel);
-			UISystem.SetScene(uiScene);	
-			
-			hero 	= new Warrior(gameScene);
-			monster = new Enemy(gameScene);
-			
-			//Run the scene.
-			Director.Instance.RunWithScene(gameScene, true);
-			
-			
+			Font ();
+			LoadContent();
 		}
 		
-		public static void Combat()
+		public static void Font()
 		{
-			if(tDamage.Seconds() > hero.GetHaste)
-			{
-				monster.GetHealth -= hero.GetStrength / 2;		
-				healthLabel.Text = "Health  " + monster.GetHealth.ToString();
-				tDamage.Reset();
-			}
+			//Assign details for font.		
+			bodyText 	= new UIFont("/Application/fonts/8bitlim.ttf", 28,
+			              Sce.PlayStation.Core.Imaging.FontStyle.Regular);
+			bodyTextShadow 		 			= new TextShadowSettings();
+			bodyTextShadow.Color 			= new UIColor(0.0f,0.0f,1.0f,1.0f);
+			bodyTextShadow.HorizontalOffset = 2.0f;
+			bodyTextShadow.VerticalOffset   = 2.0f;
+		}
+		
+		public static void LoadContent()
+		{	
+			currentState.LoadContent();
 			
+			//Run the scene.
+			Director.Instance.RunWithScene(currentState.GameScene, true);
+		}
+		
+		public static void UnloadContent()
+		{
+			currentState.UnloadContent();
 		}
 		
 		public static void Update ()
 		{
-			// Query gamepad for current state
-			var gamePadData = GamePad.GetData (0);
-			
-			//Update the hero
-			hero.Update(0.0f);
-			//Update the enemy
-			monster.Update(0.0f);
-			Combat();
+			currentState.Update();
 		}
 	}
 }
