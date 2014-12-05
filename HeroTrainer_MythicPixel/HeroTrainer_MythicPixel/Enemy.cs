@@ -13,16 +13,18 @@ namespace HeroTrainer_MythicPixel
 		private static SpriteUV		enemy;
 		private static TextureInfo	enemyInfo;
 		private static float 		health;
+		private static Warrior		hero;
 		
 		public float Health { get{return health;} set{health = value;} }
 		
-		public Enemy (Scene gameScene)
+		public Enemy (Scene gameScene, Warrior w)
 		{
 			enemyInfo 			= new TextureInfo("/Application/textures/monster.png");
 			enemy				= new SpriteUV(enemyInfo);
 			enemy.Position		= new Vector2((Director.Instance.GL.Context.GetViewport().Width/2) + 75,
 			                            	  Director.Instance.GL.Context.GetViewport().Height/2);
-			health = 50.0f;
+			hero = w;
+			health = ScaleHealth();
 			enemy.Scale = enemyInfo.TextureSizef;
 			gameScene.AddChild(enemy);
 		}
@@ -31,6 +33,17 @@ namespace HeroTrainer_MythicPixel
 		{
 			enemyInfo.Dispose();
 		}
+		
+		public float ScaleHealth()
+		{
+			float monsterHealth = (hero.Strength + hero.Luck + ((999 - hero.Haste) / 5) + hero.Opportunity);
+			
+			Console.WriteLine("Monster Scaled Health = " + monsterHealth);
+			
+			return monsterHealth;
+		}
+		
+	
 		public void Update(float deltaTime)
 		{
 		}

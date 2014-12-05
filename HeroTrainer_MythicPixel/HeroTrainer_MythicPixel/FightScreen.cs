@@ -19,7 +19,7 @@ namespace HeroTrainer_MythicPixel
 			
 		private const int		LABEL_COUNT = 5;
 		
-		public FightScreen (AppMain instance) : base(instance)
+		public FightScreen () : base()
 		{
 		}
 		public override void LoadContent()
@@ -31,7 +31,7 @@ namespace HeroTrainer_MythicPixel
 			gameScene = new Sce.PlayStation.HighLevel.GameEngine2D.Scene();
 			gameScene.Camera.SetViewFromViewport();
 			hero 	  = new Warrior(gameScene);
-			monster   = new Enemy(gameScene);
+			monster   = new Enemy(gameScene, hero);
 			
 			//Set the ui scene.
 			uiScene 	 	= new Sce.PlayStation.HighLevel.UI.Scene();
@@ -48,14 +48,15 @@ namespace HeroTrainer_MythicPixel
 			healthLabel = new Sce.PlayStation.HighLevel.UI.Label();
 			healthLabel.HorizontalAlignment = HorizontalAlignment.Left;
 			healthLabel.VerticalAlignment = VerticalAlignment.Top;
-			healthLabel.Font 	   = theGame.BodyText;
-			healthLabel.TextShadow = theGame.BodyTextShadow;
+			//healthLabel.Font 	   = theGame.BodyText;
+			//healthLabel.TextShadow = theGame.BodyTextShadow;
 
 			healthLabel.SetPosition(
 				Director.Instance.GL.Context.GetViewport().Width/2 - healthLabel.Width/2,
 				Director.Instance.GL.Context.GetViewport().Height*0.1f - healthLabel.Height/2);
 			
-			healthLabel.Text = "Enemy Health  50";
+			//healthLabel.Text = "Enemy Health " + monster.Health.ToString("#.#");
+			healthLabel.Text = "Enemy Health " + (int)monster.Health;
 			
 			//Hero labels.
 			heroLabel = new Sce.PlayStation.HighLevel.UI.Label[LABEL_COUNT];
@@ -69,8 +70,8 @@ namespace HeroTrainer_MythicPixel
 			{
 				heroLabel[i].HorizontalAlignment = HorizontalAlignment.Left;
 				heroLabel[i].VerticalAlignment 	 = VerticalAlignment.Middle;			
-				heroLabel[i].Font 		= theGame.BodyText;
-				heroLabel[i].TextShadow = theGame.BodyTextShadow;
+				//heroLabel[i].Font 		= theGame.BodyText;
+				//heroLabel[i].TextShadow = theGame.BodyTextShadow;
 				heroLabel[i].SetPosition(25,
 					Director.Instance.GL.Context.GetViewport().Height/4 + (healthLabel.Height * i) + 15);
 			}
@@ -96,26 +97,57 @@ namespace HeroTrainer_MythicPixel
 		{
 			hero.Dispose();
 			monster.Dispose();
+			
 		}
 		
-		public void Combat()
+		public override void Combat()
 		{
-			if(tDamage.Seconds() > hero.Haste)
+			if(tDamage.Seconds() > (hero.Haste / 1000))
 			{
-				monster.Health -= hero.Strength / 2;		
-				healthLabel.Text = "Enemy Health  " + monster.Health.ToString();
+				monster.Health -= (GetHeroPower() / 3);		
+				//healthLabel.Text = "Enemy Health  " + monster.Health.ToString("#.#");
+
+				healthLabel.Text = "Enemy Health  " + (int)monster.Health;
+				
 				tDamage.Reset();
 			}
 			
 			if(monster.Health <= 0)
 			{
-				//Go to next scene.
-			}			
+				//GameStateManager.Instance.ChangeState(new IntroScreen());
+			}
+			
+			if (monster.Health < 1)
+					KillMonster();
 		}
 		
-		public override void Update()
+		public float GetHeroPower()
 		{
-			Combat();			
+			//Calculates the power of the hero based on its upgrades
+			float heroPower = (hero.Strength + hero.Luck + (999 - hero.Haste / 5) + hero.Opportunity);
+			
+			return heroPower;		
+		}	
+		
+		public void KillMonster()
+		{
+			//Reset monster status
+			monster.Health = monster.ScaleHealth();	
+			
+			//Award gold to player
+			hero.Gold = hero.Gold + GoldReward();
+		}	
+		
+		public float GoldReward()
+		{
+			float goldCalc;
+			goldCalc = GetHeroPower() * 2;
+			return goldCalc;
+		}
+		
+		
+		public override void Update()
+		{		
 			//Update the hero
 			hero.Update(0.0f);
 			//Update the enemy

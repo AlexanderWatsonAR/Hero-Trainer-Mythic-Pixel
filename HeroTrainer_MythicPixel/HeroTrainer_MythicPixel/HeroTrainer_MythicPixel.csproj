@@ -43,7 +43,8 @@
     <Compile Include="Enemy.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="FightScreen.cs" />
-    <Compile Include="IntroScene.cs" />
+    <Compile Include="IntroScreen.cs" />
+    <Compile Include="GameStateManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ShaderProgram Include="shaders\Texture.fcg" />

@@ -12,25 +12,26 @@ using Sce.PlayStation.HighLevel.UI;
 
 namespace HeroTrainer_MythicPixel
 {
-	public class AppMain
+	public static class AppMain
 	{	
 		private static GameState currentState;
-		private static AppMain instance = new AppMain();
+		//private static AppMain theGame = new AppMain();
 		
 		private static Sce.PlayStation.HighLevel.UI.UIFont					bodyText;
 		private static Sce.PlayStation.HighLevel.UI.TextShadowSettings		bodyTextShadow;
 		
 		//Accessors
-		public Sce.PlayStation.HighLevel.UI.UIFont BodyText{ get{return bodyText;} }
-		public Sce.PlayStation.HighLevel.UI.TextShadowSettings BodyTextShadow{ get{return bodyTextShadow;} }
-		public GameState State { get{return currentState;} set{currentState = value;} }
+		public static Sce.PlayStation.HighLevel.UI.UIFont BodyText{ get{return bodyText;} }
+		public static Sce.PlayStation.HighLevel.UI.TextShadowSettings BodyTextShadow{ get{return bodyTextShadow;} }
+		public static GameState State { get{return currentState;} set{currentState = value;} }
 		
-		public AppMain(){}
+		//public static AppMain(){}
 		
 		public static void Main(string[] args)
 		{	
-			currentState = new FightScreen(instance);
+			//currentState = new FightScreen();
 			Initialize();
+			GameStateManager.Instance.ChangeState(new FightScreen());
 			
 			//Game loop.
 			bool quitGame = false;
@@ -54,7 +55,6 @@ namespace HeroTrainer_MythicPixel
 			Director.Initialize ();
 			UISystem.Initialize(Director.Instance.GL.Context);
 			
-			//Set the ui scene.
 			Font ();
 			LoadContent();
 		}
@@ -71,21 +71,16 @@ namespace HeroTrainer_MythicPixel
 		}
 		
 		public static void LoadContent()
-		{	
-			currentState.LoadContent();
-			
-			//Run the scene.
-			Director.Instance.RunWithScene(currentState.GameScene, true);
+		{		
 		}
 		
 		public static void UnloadContent()
 		{
-			currentState.UnloadContent();
 		}
 		
 		public static void Update ()
 		{
-			currentState.Update();
+			GameStateManager.Instance.Update();
 		}
 	}
 }

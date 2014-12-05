@@ -16,6 +16,7 @@ namespace HeroTrainer_MythicPixel
 		public float Luck{ get{return luck;} set{luck = value;} }
 		public float Haste{ get{return haste;} set{haste = value;} }
 		public float Opportunity{ get{return opportunity;} set{opportunity = value;} }
+		public float Gold{ get{return gold;} set{gold = value;} }
 		public string Name{ get{return name;} }
 		
 		private static string name;
@@ -24,6 +25,7 @@ namespace HeroTrainer_MythicPixel
 		private static float luck;
 		private static float haste;
 		private static float opportunity;
+		private static float gold;
 		
 		private static SpriteUV		bob;
 		private static TextureInfo	bobInfo;
@@ -77,6 +79,12 @@ namespace HeroTrainer_MythicPixel
 					{
 						line = line.TrimStart('o');
 						opportunity = float.Parse(line);
+					}
+					
+					else if (line.IndexOf ('g') == 0)
+					{
+						line = line.TrimStart ('g');
+						gold = float.Parse (line);						
 					}
 					else
 					{

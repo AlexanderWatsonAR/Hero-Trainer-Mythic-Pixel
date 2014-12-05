@@ -11,18 +11,20 @@ namespace HeroTrainer_MythicPixel
 		public Sce.PlayStation.HighLevel.GameEngine2D.Scene GameScene{get{return gameScene;}}
 		public Sce.PlayStation.HighLevel.UI.Scene UIScene{get{return uiScene;}}
 		
-		protected AppMain theGame;
 		
-   		public GameState(AppMain instance)
+   		public GameState()
 		{
-			theGame = instance;
+			LoadContent();
 		}
 		
 		public virtual void LoadContent() {}
 		
 		public virtual void UnloadContent(){}
 		
+		public virtual void Combat(){}
+		
    		public virtual void Update(){}
 	}
 }
+
 
