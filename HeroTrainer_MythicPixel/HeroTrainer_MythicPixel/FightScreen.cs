@@ -220,6 +220,8 @@ namespace HeroTrainer_MythicPixel
 			heroLabel[4].Text = "Opportunity " + hero.Opportunity.ToString();
 			heroLabel[5].Text = "Gold " + hero.Gold.ToString();
 			
+			
+			
 		}
 			
 		
