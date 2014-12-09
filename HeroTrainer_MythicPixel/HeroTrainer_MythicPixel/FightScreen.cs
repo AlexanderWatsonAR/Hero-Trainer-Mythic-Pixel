@@ -12,12 +12,13 @@ namespace HeroTrainer_MythicPixel
 	{
 		private Sce.PlayStation.HighLevel.UI.Label							healthLabel;
 		private Sce.PlayStation.HighLevel.UI.Label[]						heroLabel;
+		private Sce.PlayStation.HighLevel.UI.Label							fightLabel;
 		
 		private Warrior 													hero;
 		private Enemy														monster;
 		private Timer														tDamage; 
 			
-		private const int		LABEL_COUNT = 5;
+		private const int		LABEL_COUNT = 6;
 		
 		public FightScreen () : base()
 		{
@@ -43,6 +44,12 @@ namespace HeroTrainer_MythicPixel
 			Panel leftPanel  = new Panel();
 			leftPanel.Width  = 0;
 			leftPanel.Height = Director.Instance.GL.Context.GetViewport().Height/2;
+			
+			
+			Panel bottomPanel = new Panel();
+			bottomPanel.Width = Director.Instance.GL.Context.GetViewport().Width/2;
+			bottomPanel.Height = Director.Instance.GL.Context.GetViewport().Height/2;
+			
 			
 			//Monster health label.
 			healthLabel = new Sce.PlayStation.HighLevel.UI.Label();
@@ -76,11 +83,14 @@ namespace HeroTrainer_MythicPixel
 					Director.Instance.GL.Context.GetViewport().Height/4 + (healthLabel.Height * i) + 15);
 			}
 			
-			heroLabel[0].Text = "Name " + hero.Name;
-			heroLabel[1].Text = "Strength " + hero.Strength.ToString();
-			heroLabel[2].Text = "Luck " + hero.Luck.ToString();
-			heroLabel[3].Text = "Haste " + hero.Haste.ToString();
-			heroLabel[4].Text = "Opportunity " + hero.Opportunity.ToString();
+			//Fight labels
+			fightLabel = new Sce.PlayStation.HighLevel.UI.Label();
+			fightLabel.HorizontalAlignment = HorizontalAlignment.Center;
+			fightLabel.VerticalAlignment = VerticalAlignment.Middle;
+			fightLabel.Width = 960;
+			fightLabel.SetPosition(0, 400);
+			
+			UpdateStatLabels();
 			
 			topPanel.AddChildLast(healthLabel);
 			for(int i = 0; i < LABEL_COUNT; i++)
@@ -88,8 +98,11 @@ namespace HeroTrainer_MythicPixel
 				leftPanel.AddChildLast(heroLabel[i]);
 			}
 			
+			bottomPanel.AddChildLast(fightLabel);
+			
 			uiScene.RootWidget.AddChildFirst(topPanel);
 			uiScene.RootWidget.AddChildLast(leftPanel);
+			uiScene.RootWidget.AddChildLast(bottomPanel);
 			UISystem.SetScene(uiScene);	
 		}
 		
@@ -102,29 +115,63 @@ namespace HeroTrainer_MythicPixel
 		
 		public override void Combat()
 		{
-			if(tDamage.Seconds() > (hero.Haste / 1000))
+			if(tDamage.Milliseconds() > (hero.Haste))
 			{
-				monster.Health -= (GetHeroPower() / 3);		
+				fightLabel.Text = "";
+				Console.WriteLine ("Health before line 108 " + monster.Health);
+				monster.Health -= ResolveDamage();
+
 				//healthLabel.Text = "Enemy Health  " + monster.Health.ToString("#.#");
+				
+				Console.WriteLine ("Health after line 108 = " + monster.Health);
 
 				healthLabel.Text = "Enemy Health  " + (int)monster.Health;
 				
+				UpdateStatLabels();
+								
 				tDamage.Reset();
 			}
-			
-			if(monster.Health <= 0)
-			{
-				//GameStateManager.Instance.ChangeState(new IntroScreen());
-			}
-			
-			if (monster.Health < 1)
+						
+			if (monster.Health <= 0)
 					KillMonster();
 		}
+		
+		public float ResolveDamage()
+		{
+			float damage;
+			damage = hero.Strength;
+			
+			bool critCheck = CheckIfCrit();
+			
+			if (critCheck)
+				damage = damage * (2 + (hero.Opportunity / 10));
+			
+			return damage;
+			
+		}
+		
+		public bool CheckIfCrit()
+		{
+			Random critCheck = new Random();
+			
+			float critFloat = critCheck.Next(100);
+			
+			if (critFloat <= hero.Luck)
+			{
+				fightLabel.Text = ("You critically hit the monster!");
+		
+				return true;
+			}	
+			else
+				return false;
+			
+			
+		}	
 		
 		public float GetHeroPower()
 		{
 			//Calculates the power of the hero based on its upgrades
-			float heroPower = (hero.Strength + hero.Luck + (999 - hero.Haste / 5) + hero.Opportunity);
+			float heroPower = ((hero.Strength + hero.Luck + (999 - hero.Haste / 5) + hero.Opportunity) / 325);
 			
 			return heroPower;		
 		}	
@@ -133,17 +180,22 @@ namespace HeroTrainer_MythicPixel
 		{
 			//Reset monster status
 			monster.Health = monster.ScaleHealth();	
+			Console.WriteLine ("Health Reset");
 			
 			//Award gold to player
-			hero.Gold = hero.Gold + GoldReward();
+			hero.Gold += GoldReward();
 		}	
 		
-		public float GoldReward()
+		public int GoldReward()
 		{
-			float goldCalc;
-			goldCalc = GetHeroPower() * 2;
-			return goldCalc;
-		}
+			Random tempGold = new Random();
+			
+			int goldInt = tempGold.Next(9) + 1;
+			
+			fightLabel.Text = ("You killed the monster! It dropped " + goldInt + " gold!");
+			
+			return goldInt;		
+		}	
 		
 		
 		public override void Update()
@@ -153,6 +205,24 @@ namespace HeroTrainer_MythicPixel
 			//Update the enemy
 			monster.Update(0.0f);
 		}
+			
+		
+		public void UpdateStatLabels()
+		{
+			float tempHaste;
+			
+			tempHaste = (1000 - hero.Haste);
+			
+			heroLabel[0].Text = "Name " + hero.Name;
+			heroLabel[1].Text = "Strength " + hero.Strength.ToString();
+			heroLabel[2].Text = "Luck " + hero.Luck.ToString();
+			heroLabel[3].Text = "Haste " + tempHaste.ToString();
+			heroLabel[4].Text = "Opportunity " + hero.Opportunity.ToString();
+			heroLabel[5].Text = "Gold " + hero.Gold.ToString();
+			
+		}
+			
+		
 	}
 }
 
