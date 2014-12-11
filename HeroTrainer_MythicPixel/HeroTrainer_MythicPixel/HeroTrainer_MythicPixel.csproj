@@ -73,5 +73,6 @@
     <Content Include="sounds\1468__lostchocolatelab__10sword05.aif" />
     <Content Include="sounds\30247__streety__sword5.flac" />
     <Content Include="sounds\60007__qubodup__swipe-whoosh.flac" />
+    <Content Include="textures\character.png" />
   </ItemGroup>
 </Project>

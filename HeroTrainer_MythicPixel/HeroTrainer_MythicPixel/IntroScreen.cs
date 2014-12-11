@@ -1,6 +1,7 @@
 using System;
 using Sce.PlayStation.Core;
 using Sce.PlayStation.Core.Graphics;
+using Sce.PlayStation.Core.Input;
 
 using Sce.PlayStation.HighLevel.GameEngine2D;
 using Sce.PlayStation.HighLevel.GameEngine2D.Base;
@@ -34,13 +35,23 @@ namespace HeroTrainer_MythicPixel
 				Director.Instance.GL.Context.GetViewport().Width/2 - introLabel.Width/2,
 				Director.Instance.GL.Context.GetViewport().Height*0.1f - introLabel.Height/2);
 			
-			introLabel.Text = " Intro Scene.";
+			introLabel.Text = "Intro Scene";
 			uiScene.RootWidget.AddChildFirst(introLabel);
 			UISystem.SetScene(uiScene);
 		}
 		
 		public override void Update ()
 		{
+			Input();
+		}
+		
+		public void Input()
+		{
+			var touches = Touch.GetData(0);
+			if(touches.Count > 0)
+				GameStateManager.Instance.ChangeState(new FightScreen());
+				
+			
 		}
 	}
 }

@@ -12,34 +12,34 @@ namespace HeroTrainer_MythicPixel
 	public class Warrior
 	{	
 		//Accessor
-		public float Strength{ get{return strength;} set{strength = value;} }
-		public float Luck{ get{return luck;} set{luck = value;} }
-		public float Haste{ get{return haste;} set{haste = value;} }
-		public float Opportunity{ get{return opportunity;} set{opportunity = value;} }
-		public int Gold{ get{return gold;} set{gold = value;} }
+		public float  Strength{ get{return strength;} set{strength = value;} }
+		public float  Luck{ get{return luck;} set{luck = value;} }
+		public float  Haste{ get{return haste;} set{haste = value;} }
+		public float  Opportunity{ get{return opportunity;} set{opportunity = value;} }
+		public int 	  Gold{ get{return gold;} set{gold = value;} }
 		public string Name{ get{return name;} }
 		
+		private static float  strength;
+		private static float  luck;
+		private static float  haste;
+		private static float  opportunity;
+		private static int	  gold;
 		private static string name;
 		
-		private static float strength;
-		private static float luck;
-		private static float haste;
-		private static float opportunity;
-		private static int gold;
+		private const string path = "/Application/statistics/character.txt";
 		
 		private static SpriteUV		bob;
 		private static TextureInfo	bobInfo;
 		
 		public Warrior (Scene gameScene)
 		{
-			string path			= "/Application/statistics/character.txt";
 			bobInfo 			= new TextureInfo("/Application/textures/bob.png");
 			bob					= new SpriteUV(bobInfo);
 			bob.Position		= new Vector2(Director.Instance.GL.Context.GetViewport().Width/4,
 			                            	  Director.Instance.GL.Context.GetViewport().Height/2);
 			
 			bob.Scale = bobInfo.TextureSizef;
-			Load(path);
+			Load();
 			gameScene.AddChild(bob);	
 		}
 		
@@ -48,7 +48,7 @@ namespace HeroTrainer_MythicPixel
 			bobInfo.Dispose();
 		}
 		
-		public static void Load(string path)
+		public static void Load()
 		{
 			Console.WriteLine(File.Exists(path)? "File exists." : "File does not exist.");
 			using (StreamReader reader = new StreamReader(path))
@@ -81,19 +81,44 @@ namespace HeroTrainer_MythicPixel
 						opportunity = float.Parse(line);
 					}
 					
-					else if (line.IndexOf ('g') == 0)
+					else if(line.IndexOf ('g') == 0)
 					{
 						line = line.TrimStart ('g');
 						gold = int.Parse (line);						
 					}
+					
 					else
 					{
 						name = line;
 					}
+					
 					line = reader.ReadLine();
 				}
+				reader.Close();
 			}
 		}
+		
+		//public void Save()
+		//{
+		//	SaveStats();
+		//}
+		
+		//public static void SaveStats()
+		//{
+			//Checks if the file exists.
+		//	Console.WriteLine(File.Exists(path)? "File exists." : "File does not exist.");
+			
+			//empties the file of everything.
+		//	System.IO.File.WriteAllText(@path, string.Empty);
+			
+			// Each array entry represents a line to be entered into the file.
+		//	string[] lines = {"7", "Bob", "s " + strength, "l " + luck,
+		//					 "h " + haste, "o " + opportunity, "g " + gold};
+			
+			// Writes into the file line by line.
+		//	System.IO.File.WriteAllLines(@path, lines);
+			
+		//}
 		
 		public void Update(float deltaTime)
 		{
