@@ -2,6 +2,7 @@ using System;
 using Sce.PlayStation.Core;
 using Sce.PlayStation.Core.Graphics;
 using Sce.PlayStation.Core.Input;
+using Sce.PlayStation.Core.Audio;
 
 using Sce.PlayStation.HighLevel.GameEngine2D;
 using Sce.PlayStation.HighLevel.GameEngine2D.Base;
@@ -11,42 +12,57 @@ namespace HeroTrainer_MythicPixel
 {
 	public class FightScreen: GameState 
 	{
-		private Sce.PlayStation.HighLevel.UI.Label					healthLabel;
-		private Sce.PlayStation.HighLevel.UI.Label[]				heroLabel;
-		private Sce.PlayStation.HighLevel.UI.Label					fightLabel;
+		private Sce.PlayStation.HighLevel.UI.Label							healthLabel;
+		private Sce.PlayStation.HighLevel.UI.Label[]						heroLabel;
+		private Sce.PlayStation.HighLevel.UI.Label							fightLabel;
+		
+		private SpriteUV 													background;
+		private TextureInfo													backgroundInfo;
 		
 		private static Sce.PlayStation.HighLevel.UI.UIFont					bodyText;
 		private static Sce.PlayStation.HighLevel.UI.TextShadowSettings		bodyTextShadow;
 		
-		private Warrior 											hero;
-		private Enemy												monster;
-		private Timer												tDamage; 
-		private Timer												tInput;
+		private Warrior 		hero;
+		private Enemy			monster;
+		private Timer			tDamage; 
+		private Timer			tInput;
 		
-		private UIColor												labelRed;
-		private UIColor												labelNoColor;
+		private UIColor			labelRed;
+		private UIColor			labelNoColor;
 			
 		private const int		LABEL_COUNT = 6;
 		
 		private int				menuSelection = 1;
+		private SoundPlayer		player;
+		
 		
 		public FightScreen () : base()
 		{
 		}
 		public override void LoadContent()
-		{
+		{ 
 			tDamage = new Timer();
 			tDamage.Reset();
 			
 			tInput = new Timer();
 			tInput.Reset();
 			
-			labelRed = new UIColor(1.0f, 0.0f, 0.0f, 1.0f);
+			labelRed 	 = new UIColor(1.0f, 0.0f, 0.0f, 1.0f);
 			labelNoColor = new UIColor(1.0f, 1.0f, 1.0f, 0.0f);
+			
+			player 	= new Sound("/Application/sounds/kill.wav").CreatePlayer();
 			
 			//Set game scene
 			gameScene = new Sce.PlayStation.HighLevel.GameEngine2D.Scene();
 			gameScene.Camera.SetViewFromViewport();
+			
+			backgroundInfo 			= new TextureInfo("/Application/textures/background1.png");
+			background				= new SpriteUV(backgroundInfo);
+			background.Position		= new Vector2(0,0);
+			
+			background.Scale = backgroundInfo.TextureSizef;
+			gameScene.AddChild(background);
+			
 			hero 	  = new Warrior(gameScene);
 			monster   = new Enemy(gameScene, hero);
 			
@@ -78,6 +94,7 @@ namespace HeroTrainer_MythicPixel
 			healthLabel.SetPosition(
 				Director.Instance.GL.Context.GetViewport().Width/2 - healthLabel.Width/2,
 				Director.Instance.GL.Context.GetViewport().Height*0.1f - healthLabel.Height/2);
+			healthLabel.Width = 500;
 			
 			healthLabel.Text = "Enemy Health " + (int)monster.Health;
 			
@@ -127,7 +144,7 @@ namespace HeroTrainer_MythicPixel
 		public static void Font()
 		{
 			//Assign details for font.		
-			bodyText 	= new UIFont("/Application/fonts/8bitlim.ttf", 28,
+			bodyText 	= new UIFont("/Application/fonts/8bitOperatorPlus8-Regular.ttf", 20,
 			              Sce.PlayStation.Core.Imaging.FontStyle.Regular);
 			bodyTextShadow 		 			= new TextShadowSettings();
 			bodyTextShadow.Color 			= new UIColor(0.0f,0.0f,1.0f,1.0f);
@@ -211,23 +228,20 @@ namespace HeroTrainer_MythicPixel
 			monster.Health = monster.ScaleHealth();	
 			Console.WriteLine ("Health Reset");
 			
-			//Award gold to player
-			hero.Gold += GoldReward();
-			//hero.Save();
+			player.Play();
 			
+			//Award gold to player
+			hero.Gold += GoldReward();	
 		}	
 		
 		public int GoldReward()
 		{
 			Random tempGold = new Random();
-			
 			int goldInt = tempGold.Next(9) + 1;
-			
 			fightLabel.Text = ("You killed the monster! It dropped " + goldInt + " gold!");
 			
 			return goldInt;		
 		}	
-		
 		
 		public override void Update()
 		{		
@@ -242,18 +256,13 @@ namespace HeroTrainer_MythicPixel
 				LabelMenu();		
 			else
 			{
-				heroLabel[0].BackgroundColor = labelNoColor;
-				heroLabel[1].BackgroundColor = labelNoColor;
-				heroLabel[2].BackgroundColor = labelNoColor;
-				heroLabel[3].BackgroundColor = labelNoColor;
-				heroLabel[4].BackgroundColor = labelNoColor;
-				heroLabel[5].BackgroundColor = labelNoColor;
+				for (int i = 0; i < LABEL_COUNT; i++)
+				{
+					heroLabel[i].BackgroundColor = labelNoColor;
+				}
 			}
 			
-			
-			//Console.WriteLine(menuSelection);
-		}
-			
+		}			
 		
 		public void UpdateStatLabels()
 		{
@@ -337,14 +346,8 @@ namespace HeroTrainer_MythicPixel
 				heroLabel[4].BackgroundColor = labelRed;
 			else
 				heroLabel[4].BackgroundColor = labelNoColor;
-			
-			
-			
-		}	
-			
-			
-		
-		
+
+		}			
 	}
 }
 

@@ -62,17 +62,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="textures\bob.png" />
-    <Content Include="textures\monster.png" />
     <Content Include="statistics\character.txt">
       <DeployService-Deploy>true</DeployService-Deploy>
     </Content>
     <Content Include="fonts\8bitlim.ttf" />
-    <Content Include="sounds\166039__bender__monster-pain5.wav" />
-    <Content Include="sounds\219005__yap-audio-production__weaponswipe03.mp3" />
-    <Content Include="sounds\249686__cylon8472__cthulhu-growl.wav" />
-    <Content Include="sounds\1468__lostchocolatelab__10sword05.aif" />
-    <Content Include="sounds\30247__streety__sword5.flac" />
-    <Content Include="sounds\60007__qubodup__swipe-whoosh.flac" />
     <Content Include="textures\character.png" />
+    <Content Include="fonts\8bitOperatorPlus8-Regular.ttf" />
+    <Content Include="textures\background.png" />
+    <Content Include="textures\enemy.png" />
+    <Content Include="textures\background1.png" />
+    <Content Include="sounds\growl.wav" />
+    <Content Include="sounds\kill.wav" />
   </ItemGroup>
 </Project>

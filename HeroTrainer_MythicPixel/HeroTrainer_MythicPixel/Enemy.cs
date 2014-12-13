@@ -19,7 +19,7 @@ namespace HeroTrainer_MythicPixel
 		
 		public Enemy (Scene gameScene, Warrior w)
 		{
-			enemyInfo 			= new TextureInfo("/Application/textures/monster.png");
+			enemyInfo 			= new TextureInfo("/Application/textures/enemy.png");
 			enemy				= new SpriteUV(enemyInfo);
 			enemy.Position		= new Vector2((Director.Instance.GL.Context.GetViewport().Width/2) + 75,
 			                            	  Director.Instance.GL.Context.GetViewport().Height/2);

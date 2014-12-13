@@ -17,7 +17,7 @@ namespace HeroTrainer_MythicPixel
 		public static void Main(string[] args)
 		{	
 			Initialize();
-			GameStateManager.Instance.ChangeState(new FightScreen());
+			GameStateManager.Instance.ChangeState(new IntroScreen());
 			
 			//Game loop.
 			bool quitGame = false;

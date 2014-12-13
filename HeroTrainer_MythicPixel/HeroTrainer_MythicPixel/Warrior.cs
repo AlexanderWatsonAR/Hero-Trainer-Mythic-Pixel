@@ -33,7 +33,7 @@ namespace HeroTrainer_MythicPixel
 		
 		public Warrior (Scene gameScene)
 		{
-			bobInfo 			= new TextureInfo("/Application/textures/bob.png");
+			bobInfo 			= new TextureInfo("/Application/textures/character.png");
 			bob					= new SpriteUV(bobInfo);
 			bob.Position		= new Vector2(Director.Instance.GL.Context.GetViewport().Width/4,
 			                            	  Director.Instance.GL.Context.GetViewport().Height/2);
@@ -97,28 +97,6 @@ namespace HeroTrainer_MythicPixel
 				reader.Close();
 			}
 		}
-		
-		//public void Save()
-		//{
-		//	SaveStats();
-		//}
-		
-		//public static void SaveStats()
-		//{
-			//Checks if the file exists.
-		//	Console.WriteLine(File.Exists(path)? "File exists." : "File does not exist.");
-			
-			//empties the file of everything.
-		//	System.IO.File.WriteAllText(@path, string.Empty);
-			
-			// Each array entry represents a line to be entered into the file.
-		//	string[] lines = {"7", "Bob", "s " + strength, "l " + luck,
-		//					 "h " + haste, "o " + opportunity, "g " + gold};
-			
-			// Writes into the file line by line.
-		//	System.IO.File.WriteAllLines(@path, lines);
-			
-		//}
 		
 		public void Update(float deltaTime)
 		{
