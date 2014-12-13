@@ -103,6 +103,11 @@ namespace HeroTrainer_MythicPixel
 			Input();
 		}
 		
+		public override void UnloadContent()
+		{
+			backgroundInfo.Dispose();
+		}
+		
 		public void Input()
 		{
 			var touches = Touch.GetData(0);

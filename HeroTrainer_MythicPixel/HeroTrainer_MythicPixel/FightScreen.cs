@@ -40,16 +40,17 @@ namespace HeroTrainer_MythicPixel
 		{
 		}
 		public override void LoadContent()
-		{ 
+		{
+			
 			tDamage = new Timer();
 			tDamage.Reset();
 			
 			tInput = new Timer();
 			tInput.Reset();
-			
+			//Back colour for labels.
 			labelRed 	 = new UIColor(1.0f, 0.0f, 0.0f, 1.0f);
 			labelNoColor = new UIColor(1.0f, 1.0f, 1.0f, 0.0f);
-			
+			//kill sound for enemy.
 			player 	= new Sound("/Application/sounds/kill.wav").CreatePlayer();
 			
 			//Set game scene
@@ -76,7 +77,6 @@ namespace HeroTrainer_MythicPixel
 			Panel leftPanel  = new Panel();
 			leftPanel.Width  = 0;
 			leftPanel.Height = Director.Instance.GL.Context.GetViewport().Height/2;
-			
 			
 			Panel bottomPanel = new Panel();
 			bottomPanel.Width = Director.Instance.GL.Context.GetViewport().Width/2;
@@ -156,7 +156,7 @@ namespace HeroTrainer_MythicPixel
 		{
 			hero.Dispose();
 			monster.Dispose();
-			
+			player.Dispose();
 		}
 		
 		public void Combat()
